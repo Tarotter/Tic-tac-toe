@@ -1,5 +1,6 @@
 
 from re import split
+import random
 
 
 def main():
@@ -9,19 +10,26 @@ def main():
     
     while who_won > 1:
         while True:
+            print("sd")
             r, c = user_input()
             if board[r][c] == "X" or board[r][c] == "O" :
                 continue
             else:
                 break
         board[r][c] = "O"
-        check_win(board)
-
-
+        print_board(board)
+        if check_win(board) == 1:
+            who_won = 0
         
+        board = computer_move(board)
+        print_board(board)
+        if check_win(board) == 1:
+            who_won = 1
 
-
-
+    if who_won == 0:
+        print("You won!!!! I will get you next time.")
+    elif who_won == 1:
+        print("You lost!!! Better luck next time")
 
 def print_board(board):
     for i in range (3):
@@ -34,7 +42,7 @@ def user_input():
     temp = input("Row Column: ")
     row, column = temp.split()
     print()
-    return row, column
+    return int(row), int(column)
 
 def game_setup():
     board = [[" " for i in range(3)] for j in range(3)]
@@ -44,6 +52,7 @@ def game_setup():
 
 def check_win(board):
 
+    counter = 0
 
     def win_con(x):
         if x == 2:
@@ -54,24 +63,41 @@ def check_win(board):
 
     for i in range(3):
         for j in range(2):
-            if board[i][j] is not " " and board[i][j] == board[i][j+1]:
-                win_con += 1
+            if board[i][j] != " " and board[i][j] == board[i][j+1]:
+                counter += 1
 
-        if win_con(win_con) == 1:
-            break
+        if win_con(counter) == 1:
+            return 1
+        else:
+            counter = 0
+            
 
     for i in range(2):
         for j in range(3):
-            if board[i][j] is not " " and board[i][j] == board[i-1][j]:
-                win_con += 1
+            if board[i][j] != " " and board[i][j] == board[i-1][j]:
+                counter += 1
 
-        if win_con(win_con) == 1:
-            break
+        if win_con(counter) == 1:
+            return 1
+        else:
+            counter = 0
 
-    for i in range(2):
-        for j in range(2):
-            if board[i][j] is not " " and board[i][j] == board[i+1][j+1]:
-                win_con += 1
+    if board[0][0] == board[1][1] == board[2][2] or board[0][2]==board[1][1]==board[3][0]:
+        return 1
 
-        if win_con(win_con) == 1:
-            break
+    return 0
+
+def computer_move(board):
+    
+    while True:
+        x = random.randint(0,2)
+        y = random.randint(0,2)
+        if board[x][y] != ' ':
+            continue
+        else:
+            board[x][y]== 'X'
+    return board
+
+main()
+
+
