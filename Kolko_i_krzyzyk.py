@@ -10,7 +10,6 @@ def main():
     
     while who_won > 1:
         while True:
-            print("sd")
             r, c = user_input()
             if board[r][c] == "X" or board[r][c] == "O" :
                 continue
@@ -20,6 +19,7 @@ def main():
         print_board(board)
         if check_win(board) == 1:
             who_won = 0
+            break
         
         board = computer_move(board)
         print_board(board)
@@ -46,7 +46,7 @@ def user_input():
 
 def game_setup():
     board = [[" " for i in range(3)] for j in range(3)]
-    board[1][1] = "x"
+    board[1][1] = "X"
     print("Lets play tic-tac-toe !!!\nI will start")
     return board
 
@@ -82,7 +82,7 @@ def check_win(board):
         else:
             counter = 0
 
-    if board[0][0] == board[1][1] == board[2][2] or board[0][2]==board[1][1]==board[3][0]:
+    if board[0][0] == board[1][1] == board[2][2] or board[0][2]==board[1][1]==board[2][0]:
         return 1
 
     return 0
@@ -95,7 +95,8 @@ def computer_move(board):
         if board[x][y] != ' ':
             continue
         else:
-            board[x][y]== 'X'
+            board[x][y] = 'X'
+            break
     return board
 
 main()
