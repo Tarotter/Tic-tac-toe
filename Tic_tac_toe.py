@@ -2,34 +2,60 @@
 from re import split
 import random
 
-
 def main():
-    who_won = 2   
+    game()
+
+    while True:
+        rematch =  input("Type 'yes' for rematch, 'no' to end: ")
+        if rematch == 'yes':
+            game()
+        elif rematch == 'no':
+            return 0
+
+
+def game():
+    check = 2   
     board = game_setup()
     print_board(board)
     
-    while who_won > 1:
+    while True:
+
+        # User input
         while True:
             r, c = user_input()
             if board[r][c] == "X" or board[r][c] == "O" :
                 continue
             else:
                 break
+
+        # User moves
         board[r][c] = "O"
         print_board(board)
+
+        # Check for win
         if check_win(board) == 1:
-            who_won = 0
+            check = 0
+            break
+        elif check_win(board) == 2:
+            check = 2
             break
         
+        # Computer moves
         board = computer_move(board)
         print_board(board)
+        
+        # Check for win
         if check_win(board) == 1:
-            who_won = 1
+            check = 1
+            break
+        elif check_win(board) == 2:
+            check = 2
+            break
 
-    if who_won == 0:
-        print("You won!!!! I will get you next time.")
-    elif who_won == 1:
-        print("You lost!!! Better luck next time")
+
+    # Print score
+    print_score(check)
+    return 0
 
 def print_board(board):
     for i in range (3):
@@ -46,7 +72,7 @@ def user_input():
 
 def game_setup():
     board = [[" " for i in range(3)] for j in range(3)]
-    board[1][1] = "X"
+    board = computer_move(board)
     print("Lets play tic-tac-toe !!!\nI will start")
     return board
 
@@ -54,36 +80,41 @@ def check_win(board):
 
     counter = 0
 
-    def win_con(x):
-        if x == 2:
-            return 1
-        else: 
-            x = 0
-            return 0
-
+    # Rows
     for i in range(3):
         for j in range(2):
             if board[i][j] != " " and board[i][j] == board[i][j+1]:
                 counter += 1
 
-        if win_con(counter) == 1:
+        if counter == 2:
             return 1
         else:
             counter = 0
             
-
+    # Columns
     for i in range(2):
         for j in range(3):
-            if board[i][j] != " " and board[i][j] == board[i-1][j]:
+            if board[i][j] != " " and board[i][j] == board[i+1][j]:
                 counter += 1
 
-        if win_con(counter) == 1:
+        if counter == 2:
             return 1
         else:
             counter = 0
 
-    if board[0][0] == board[1][1] == board[2][2] or board[0][2]==board[1][1]==board[2][0]:
+    # Diagonal
+    if board[0][0] == board[1][1] == board[2][2] != ' ' or board[0][2]==board[1][1]==board[2][0] != ' ':
         return 1
+
+    # Check for draw
+    op = 0
+    for row in board:
+        for i in row:
+            if i == ' ':
+                op = 1
+                break
+    if op == 0:
+        return 2
 
     return 0
 
@@ -98,6 +129,14 @@ def computer_move(board):
             board[x][y] = 'X'
             break
     return board
+
+def print_score(x):
+    if x == 0:
+        print("You won!!! I will get you next time.")
+    elif x == 1:
+        print("You lost!!! Better luck next time")
+    elif x == 2:
+        print("Draw!!")
 
 main()
 
